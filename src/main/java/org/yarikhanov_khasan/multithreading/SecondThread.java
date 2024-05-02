@@ -3,7 +3,7 @@ package org.yarikhanov_khasan.multithreading;
 import java.util.concurrent.Semaphore;
 
 public class SecondThread implements Runnable{
-    Semaphore s;
+    private Semaphore s;
 
     public SecondThread(Semaphore s) {
         this.s = s;
