@@ -1,45 +1,38 @@
 package org.yarikhanov_khasan.multithreading;
 
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.Phaser;
 
 public class Foo {
-    private final Semaphore s;
+    private final Phaser p;
 
-    public Foo(Semaphore s) {
-        this.s = s;
+    public Foo(Phaser p) {
+        this.p = p;
+        p.register();
     }
 
 
     public void first() {
-        try {
-            s.acquire();
             System.out.print("first");
-        }catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }finally {
-            s.release();
-        }
+            p.arrive();
     }
 
     public void second() {
-        try {
-            s.acquire();
-            System.out.print("second");
-        }catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }finally {
-            s.release();
+        while (true) {
+            if (p.getPhase() == 1) {
+                System.out.print("second");
+                p.arrive();
+                break;
+            }
         }
     }
 
     public void third() {
-        try {
-            s.acquire();
-            System.out.print("third");
-        }catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }finally {
-            s.release();
+        while (true) {
+            if (p.getPhase() == 2) {
+                System.out.print("third");
+                p.arrive();
+                break;
+            }
         }
     }
 }
